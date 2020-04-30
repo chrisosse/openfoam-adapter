@@ -5,43 +5,66 @@
     <solver-interface dimensions="3">
 
     <data:vector name="Velocity"/>
-    <data:scalar name="PressureGradient"/>
-
+    <data:scalar name="PrghGradient"/>
+    <data:scalar name="Alpha"/>
+    <data:vector name="VelocityGradient"/>
+    <data:scalar name="Prgh"/>
+    <data:scalar name="AlphaGradient"/>
 
     <mesh name="damleft-Mesh">
         <use-data name="Velocity"/>
-        <use-data name="PressureGradient"/>      
+        <use-data name="PrghGradient"/>   
+        <use-data name="Alpha"/>
+        <use-data name="VelocityGradient"/>
+        <use-data name="Prgh"/>      
+        <use-data name="AlphaGradient"/> 
     </mesh>
 
     <mesh name="damright-Mesh">
         <use-data name="Velocity"/>
-        <use-data name="PressureGradient"/>
+        <use-data name="PrghGradient"/>
+        <use-data name="Alpha"/>
+        <use-data name="VelocityGradient"/>
+        <use-data name="Prgh"/>
+        <use-data name="AlphaGradient"/>
     </mesh>
 
     <participant name="damleft">
         <use-mesh name="damleft-Mesh" provide="yes"/>
         <use-mesh name="damright-Mesh" from="damright"/>
+        <read-data name="VelocityGradient" mesh="damleft-Mesh"/>
+        <read-data name="Prgh" mesh="damleft-Mesh"/>
+        <read-data name="AlphaGradient" mesh="damleft-Mesh"/>
         <write-data name="Velocity" mesh="damleft-Mesh"/>
-        <write-data name="PressureGradient" mesh="damleft-Mesh"/>
+        <write-data name="PrghGradient" mesh="damleft-Mesh"/>
+        <write-data name="Alpha" mesh="damleft-Mesh"/>
+	<mapping:nearest-neighbor direction="read" from="damright-Mesh" to="damleft-Mesh" 		constraint="consistent" />
     </participant>
 
     <participant name="damright">
         <use-mesh name="damright-Mesh" provide="yes"/>
         <use-mesh name="damleft-Mesh" from="damleft"/>
+        <write-data name="VelocityGradient" mesh="damright-Mesh"/>
+        <write-data name="Prgh" mesh="damright-Mesh"/>
+        <write-data name="AlphaGradient" mesh="damright-Mesh"/>
         <read-data name="Velocity" mesh="damright-Mesh"/>
-        <read-data name="PressureGradient" mesh="damright-Mesh"/>
-        <mapping:nearest-neighbor direction="read" from="damleft-Mesh" to="damright-Mesh" constraint="consistent" />
+        <read-data name="PrghGradient" mesh="damright-Mesh"/>
+        <read-data name="Alpha" mesh="damright-Mesh"/>
+	<mapping:nearest-neighbor direction="read" from="damleft-Mesh" to="damright-Mesh" 		constraint="consistent" />
     </participant>
 
     <m2n:sockets from="damleft" to="damright" exchange-directory=".." />
 
     <coupling-scheme:serial-explicit>
-        <time-window-size value="0.1"/>
+        <time-window-size value="0.05"/>
         <max-time value="2.0"/>
         <participants first="damleft" second="damright"/>
-        <exchange data="Velocity" mesh="damleft-Mesh" from="damleft" to="damright"/>
-        <exchange data="PressureGradient" mesh="damleft-Mesh" from="damleft" to="damright"/>
-
+        <exchange data="VelocityGradient" mesh="damright-Mesh" from="damright" to="damleft"/>
+        <exchange data="Prgh" mesh="damright-Mesh" from="damright" to="damleft"/>
+        <exchange data="AlphaGradient" mesh="damright-Mesh" from="damright" to="damleft"/>
+	<exchange data="Velocity" mesh="damleft-Mesh" from="damleft" to="damright"/>
+        <exchange data="PrghGradient" mesh="damleft-Mesh" from="damleft" to="damright"/>
+        <exchange data="Alpha" mesh="damleft-Mesh" from="damleft" to="damright"/>
     </coupling-scheme:serial-explicit>
 
     </solver-interface>

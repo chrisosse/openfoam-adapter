@@ -23,7 +23,7 @@ boundaryField
     leftWall
     {
 	type            fixedGradient;
-        gradient          uniform 0;
+        gradient        uniform 0;
     }
 
     rightWall

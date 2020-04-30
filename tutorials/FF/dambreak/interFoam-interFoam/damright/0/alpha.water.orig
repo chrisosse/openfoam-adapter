@@ -22,9 +22,9 @@ boundaryField
 {
     leftWall
     {
-	type            inletOutlet;
+	type            fixedValue;
         inletValue      uniform 0;
-        value           uniform 0;
+        value	        uniform 0;
     }
 
     rightWall
